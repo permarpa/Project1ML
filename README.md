@@ -1,5 +1,7 @@
 # Project1ML
 Project1ML: Ising Model 
+OverLeaf file for the first project
+https://www.overleaf.com/1649348867zynrcrhwycsc
 
 # Use a branch
 Use a branch to isolate development work without affecting other branches in the repository. 
