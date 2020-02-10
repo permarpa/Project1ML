@@ -119,17 +119,17 @@ train_accuracy_liblin=np.zeros(len(lamda),np.float64)     #Define arrays to stor
 test_accuracy_liblin=np.zeros(len(lamda),np.float64)      #testing and critical data under liblinear solver
 critical_accuracy_liblin=np.zeros(len(lamda),np.float64)  #(penalty set to default L2)
 
-train_accuracy_liblin_el=np.zeros(len(lamda),np.float64)     #Define arrays to store accuracy score for training
-test_accuracy_liblin_el=np.zeros(len(lamda),np.float64)      #testing and critical data under liblinear solver
-critical_accuracy_liblin_el=np.zeros(len(lamda),np.float64)  #(penalty changed to L1+L2)
+train_accuracy_saga_el=np.zeros(len(lamda),np.float64)     #Define arrays to store accuracy score for training
+test_accuracy_saga_el=np.zeros(len(lamda),np.float64)      #testing and critical data under SAGA solver
+critical_accuracy_saga_el=np.zeros(len(lamda),np.float64)  #(penalty changed to L1+L2)
 
 train_accuracy_newt=np.zeros(len(lamda),np.float64)       #Define arrays to store accuracy score for training  
 test_accuracy_newt=np.zeros(len(lamda),np.float64)        #testing and critical data under newton-cg solver
 critical_accuracy_newt=np.zeros(len(lamda),np.float64)    #(penalty can be only L2)
 
-train_accuracy_sag=np.zeros(len(lamda),np.float64)        #Define arrays to store accuracy score for training
-test_accuracy_sag=np.zeros(len(lamda),np.float64)         #testing and critical data under SAG solver
-critical_accuracy_sag=np.zeros(len(lamda),np.float64)     #(penalty can be only L2)
+train_accuracy_saga=np.zeros(len(lamda),np.float64)        #Define arrays to store accuracy score for training
+test_accuracy_saga=np.zeros(len(lamda),np.float64)         #testing and critical data under SAGA solver
+critical_accuracy_saga=np.zeros(len(lamda),np.float64)     #(penalty set to default L2)
 
 train_accuracy_SGD=np.zeros(len(lamda),np.float64)        #Define arrays to store accuracy store for training
 test_accuracy_SGD=np.zeros(len(lamda),np.float64)         #testing and critical data under SGD classifier
@@ -147,11 +147,11 @@ for i in range(len(lamda)):
     test_accuracy_liblin[i]=clf.score(X_test,y_test)                   #penalty=L2 by default
     critical_accuracy_liblin[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='liblinear',penalty='elasticnet')
+    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga',penalty='elasticnet')
     clf.fit(X_train,y_train)
-    train_accuracy_liblin_el[i]=clf.score(X_train,y_train)                #Log regression using liblinear
-    test_accuracy_liblin_el[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
-    critical_accuracy_liblin_el[i]=clf.score(X_critical,Y_critical)
+    train_accuracy_saga_el[i]=clf.score(X_train,y_train)                #Log regression usig SAGA
+    test_accuracy_saga_el[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
+    critical_accuracy_saga_el[i]=clf.score(X_critical,Y_critical)
     
     clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='newton-cg')
     clf.fit(X_train,y_train)
@@ -159,11 +159,11 @@ for i in range(len(lamda)):
     test_accuracy_newt[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
     critical_accuracy_newt[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='sag')
+    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga')
     clf.fit(X_train,y_train)
-    train_accuracy_sag[i]=clf.score(X_train,y_train)                  #Log regression using SAG
-    test_accuracy_sag[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
-    critical_accuracy_sag[i]=clf.score(X_critical,Y_critical)
+    train_accuracy_saga[i]=clf.score(X_train,y_train)                  #Log regression using SAGA
+    test_accuracy_saga[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
+    critical_accuracy_saga[i]=clf.score(X_critical,Y_critical)
     
     clf=skl.SGDClassifier(loss='log',penalty='l2',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
     clf.fit(X_train,y_train)
@@ -188,9 +188,9 @@ plt.semilogx(lamda,critical_accuracy_liblin,'*-g',label='Critical (Liblinear)')
 plt.semilogx(lamda,train_accuracy_newt,'--b',label='Training (Newton-CG)')
 plt.semilogx(lamda,test_accuracy_newt,'--r',label='Test (Newton-CG)')
 plt.semilogx(lamda,critical_accuracy_newt,'--g',label='Critical (Newton-CG)')
-plt.semilogx(lamda,train_accuracy_sag,'*--b',label='Training (SAG)')
-plt.semilogx(lamda,test_accuracy_sag,'*--r',label='Test (SAG)')
-plt.semilogx(lamda,critical_accuracy_sag,'*--g',label='Critical (SAG)')
+plt.semilogx(lamda,train_accuracy_saga,'*--b',label='Training (SAGA)')
+plt.semilogx(lamda,test_accuracy_saga,'*--r',label='Test (SAGA)')
+plt.semilogx(lamda,critical_accuracy_saga,'*--g',label='Critical (SAGA)')
 plt.semilogx(lamda,train_accuracy_SGD,'b',label='Training (SGD)')
 plt.semilogx(lamda,test_accuracy_SGD,'r',label='Test (SGD)')
 plt.semilogx(lamda,critical_accuracy_SGD,'g',label='Critical (SGD)')
@@ -201,12 +201,12 @@ plt.title('Accuracy (Solver Variation, No Criticality)')
 plt.show()
 
 plt.figure()
-plt.semilogx(lamda,train_accuracy_liblin,'*-b',label='Training (Liblinear-L2)')
-plt.semilogx(lamda,test_accuracy_liblin,'*-r',label='Test (Liblinear-L2)')
-plt.semilogx(lamda,critical_accuracy_liblin,'*-g',label='Critical (Liblinear-L2)')
-plt.semilogx(lamda,train_accuracy_liblin_el,'--b',label='Training (Liblinear-L1+L2)')
-plt.semilogx(lamda,test_accuracy_liblin_el,'--r',label='Test (Liblinear-L1+L2)')
-plt.semilogx(lamda,critical_accuracy_liblin_el,'--g',label='Critical (Liblinear-L1+L2)')
+plt.semilogx(lamda,train_accuracy_saga,'*-b',label='Training (SAGA-L2)')
+plt.semilogx(lamda,test_accuracy_saga,'*-r',label='Test (SAGA-L2)')
+plt.semilogx(lamda,critical_accuracy_saga,'*-g',label='Critical (SAGA-L2)')
+plt.semilogx(lamda,train_accuracy_saga_el,'--b',label='Training (SAGA-L1+L2)')
+plt.semilogx(lamda,test_accuracy_saga_el,'--r',label='Test (SAGA-L1+L2)')
+plt.semilogx(lamda,critical_accuracy_saga_el,'--g',label='Critical (SAGA-L1+L2)')
 plt.semilogx(lamda,train_accuracy_SGD,'*--b',label='Training (SGD-L2)')
 plt.semilogx(lamda,test_accuracy_SGD,'*--r',label='Test (SGD-L2)')
 plt.semilogx(lamda,critical_accuracy_SGD,*--'g',label='Critical (SGD-L2)')
@@ -243,17 +243,17 @@ train_accuracy_liblin_cr=np.zeros(len(lamda),np.float64)     #Define arrays to s
 test_accuracy_liblin_cr=np.zeros(len(lamda),np.float64)      #testing and critical data under liblinear solver
 critical_accuracy_liblin_cr=np.zeros(len(lamda),np.float64)  #(penalty set to default L2)
 
-train_accuracy_liblin_el_cr=np.zeros(len(lamda),np.float64)     #Define arrays to store accuracy score for training
-test_accuracy_liblin_el_cr=np.zeros(len(lamda),np.float64)      #testing and critical data under liblinear solver
-critical_accuracy_liblin_el_cr=np.zeros(len(lamda),np.float64)  #(penalty changed to L1+L2)
+train_accuracy_saga_el_cr=np.zeros(len(lamda),np.float64)     #Define arrays to store accuracy score for training
+test_accuracy_saga_el_cr=np.zeros(len(lamda),np.float64)      #testing and critical data under SAGA solver
+critical_accuracy_saga_el_cr=np.zeros(len(lamda),np.float64)  #(penalty changed to L1+L2)
 
 train_accuracy_newt_cr=np.zeros(len(lamda),np.float64)       #Define arrays to store accuracy score for training  
 test_accuracy_newt_cr=np.zeros(len(lamda),np.float64)        #testing and critical data under newton-cg solver
 critical_accuracy_newt_cr=np.zeros(len(lamda),np.float64)    #(penalty can be only L2)
 
-train_accuracy_sag_cr=np.zeros(len(lamda),np.float64)        #Define arrays to store accuracy score for training
-test_accuracy_sag_cr=np.zeros(len(lamda),np.float64)         #testing and critical data under SAG solver
-critical_accuracy_sag_cr=np.zeros(len(lamda),np.float64)     #(penalty can be only L2)
+train_accuracy_saga_cr=np.zeros(len(lamda),np.float64)        #Define arrays to store accuracy score for training
+test_accuracy_saga_cr=np.zeros(len(lamda),np.float64)         #testing and critical data under SAGA solver
+critical_accuracy_saga_cr=np.zeros(len(lamda),np.float64)     #(penalty set to default L2)
 
 train_accuracy_SGD_cr=np.zeros(len(lamda),np.float64)        #Define arrays to store accuracy store for training
 test_accuracy_SGD_cr=np.zeros(len(lamda),np.float64)         #testing and critical data under SGD classifier
@@ -271,11 +271,11 @@ for i in range(len(lamda)):
     test_accuracy_liblin_cr[i]=clf.score(X_test,y_test)                   #penalty=L2 by default
     critical_accuracy_liblin_cr[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='liblinear',penalty='elasticnet')
+    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga',penalty='elasticnet')
     clf.fit(X_train,y_train)
-    train_accuracy_liblin_el_cr[i]=clf.score(X_train,y_train)                #Log regression using liblinear
-    test_accuracy_liblin_el_cr[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
-    critical_accuracy_liblin_el_cr[i]=clf.score(X_critical,Y_critical)
+    train_accuracy_saga_el_cr[i]=clf.score(X_train,y_train)                #Log regression using SAGA
+    test_accuracy_saga_el_cr[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
+    critical_accuracy_saga_el_cr[i]=clf.score(X_critical,Y_critical)
     
     clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='newton-cg')
     clf.fit(X_train,y_train)
@@ -283,11 +283,11 @@ for i in range(len(lamda)):
     test_accuracy_newt_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
     critical_accuracy_newt_cr[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='sag')
+    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga')
     clf.fit(X_train,y_train)
-    train_accuracy_sag_cr[i]=clf.score(X_train,y_train)                  #Log regression using SAG
-    test_accuracy_sag_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
-    critical_accuracy_sag_cr[i]=clf.score(X_critical,Y_critical)
+    train_accuracy_saga_cr[i]=clf.score(X_train,y_train)                  #Log regression using SAGA
+    test_accuracy_saga_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
+    critical_accuracy_saga_cr[i]=clf.score(X_critical,Y_critical)
     
     clf=skl.SGDClassifier(loss='log',penalty='l2',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
     clf.fit(X_train,y_train)
@@ -312,9 +312,9 @@ plt.semilogx(lamda,critical_accuracy_liblin_cr,'*-g',label='Critical (Liblinear)
 plt.semilogx(lamda,train_accuracy_newt_cr,'--b',label='Training (Newton-CG)')
 plt.semilogx(lamda,test_accuracy_newt_cr,'--r',label='Test (Newton-CG)')
 plt.semilogx(lamda,critical_accuracy_newt_cr,'--g',label='Critical (Newton-CG)')
-plt.semilogx(lamda,train_accuracy_sag_cr,'*--b',label='Training (SAG)')
-plt.semilogx(lamda,test_accuracy_sag_cr,'*--r',label='Test (SAG)')
-plt.semilogx(lamda,critical_accuracy_sag_cr,'*--g',label='Critical (SAG)')
+plt.semilogx(lamda,train_accuracy_saga_cr,'*--b',label='Training (SAGA)')
+plt.semilogx(lamda,test_accuracy_saga_cr,'*--r',label='Test (SAGA)')
+plt.semilogx(lamda,critical_accuracy_saga_cr,'*--g',label='Critical (SAGA)')
 plt.semilogx(lamda,train_accuracy_SGD_cr,'b',label='Training (SGD)')
 plt.semilogx(lamda,test_accuracy_SGD_cr,'r',label='Test (SGD)')
 plt.semilogx(lamda,critical_accuracy_SGD_cr,'g',label='Critical (SGD)')
@@ -325,12 +325,12 @@ plt.legend()
 plt.show()
 
 plt.figure()
-plt.semilogx(lamda,train_accuracy_liblin_cr,'*-b',label='Training (Liblinear-L2)')
-plt.semilogx(lamda,test_accuracy_liblin_cr,'*-r',label='Test (Liblinear-L2)')
-plt.semilogx(lamda,critical_accuracy_liblin_cr,'*-g',label='Critical (Liblinear-L2)')
-plt.semilogx(lamda,train_accuracy_liblin_el_cr,'--b',label='Training (Liblinear-L1+L2)')
-plt.semilogx(lamda,test_accuracy_liblin_el_cr,'--r',label='Test (Liblinear-L1+L2)')
-plt.semilogx(lamda,critical_accuracy_liblin_el_cr,'--g',label='Critical (Liblinear-L1+L2)')
+plt.semilogx(lamda,train_accuracy_saga_cr,'*-b',label='Training (SAGA-L2)')
+plt.semilogx(lamda,test_accuracy_saga_cr,'*-r',label='Test (SAGA-L2)')
+plt.semilogx(lamda,critical_accuracy_saga_cr,'*-g',label='Critical (SAGA-L2)')
+plt.semilogx(lamda,train_accuracy_saga_el_cr,'--b',label='Training (SAGA-L1+L2)')
+plt.semilogx(lamda,test_accuracy_saga_el_cr,'--r',label='Test (SAGA-L1+L2)')
+plt.semilogx(lamda,critical_accuracy_saga_el_cr,'--g',label='Critical (SAGA-L1+L2)')
 plt.semilogx(lamda,train_accuracy_SGD_cr,'*--b',label='Training (SGD-L2)')
 plt.semilogx(lamda,test_accuracy_SGD_cr,'*--r',label='Test (SGD-L2)')
 plt.semilogx(lamda,critical_accuracy_SGD_cr,*--'g',label='Critical (SGD-L2)')
