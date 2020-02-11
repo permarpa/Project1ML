@@ -17,7 +17,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
 import os
-from sklearn.neural_network import MLPClassifier as MLPC
+#from sklearn.neural_network import MLPClassifier as MLPC
+from sklearn.model_selection import KFold
+#from sklearn.model_selection import cross_val_score as cvs
 
 # %%
 
@@ -141,41 +143,41 @@ critical_accuracy_SGD_el=np.zeros(len(lamda),np.float64)     #(penalty changed t
 
 for i in range(len(lamda)):
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='liblinear')
+    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+1,tol=1E-3,solver='liblinear')
     clf.fit(X_train,y_train)
     train_accuracy_liblin[i]=clf.score(X_train,y_train)                #Log regression using liblinear
     test_accuracy_liblin[i]=clf.score(X_test,y_test)                   #penalty=L2 by default
     critical_accuracy_liblin[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga',penalty='elasticnet')
-    clf.fit(X_train,y_train)
-    train_accuracy_saga_el[i]=clf.score(X_train,y_train)                #Log regression usig SAGA
-    test_accuracy_saga_el[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
-    critical_accuracy_saga_el[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga',penalty='elasticnet')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_saga_el[i]=clf.score(X_train,y_train)                #Log regression usig SAGA
+    #test_accuracy_saga_el[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
+    #critical_accuracy_saga_el[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='newton-cg')
-    clf.fit(X_train,y_train)
-    train_accuracy_newt[i]=clf.score(X_train,y_train)                  #Log regression using Newton-cg
-    test_accuracy_newt[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
-    critical_accuracy_newt[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='newton-cg')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_newt[i]=clf.score(X_train,y_train)                  #Log regression using Newton-cg
+    #test_accuracy_newt[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
+    #critical_accuracy_newt[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga')
-    clf.fit(X_train,y_train)
-    train_accuracy_saga[i]=clf.score(X_train,y_train)                  #Log regression using SAGA
-    test_accuracy_saga[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
-    critical_accuracy_saga[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_saga[i]=clf.score(X_train,y_train)                  #Log regression using SAGA
+    #test_accuracy_saga[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
+    #critical_accuracy_saga[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.SGDClassifier(loss='log',penalty='l2',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
-    clf.fit(X_train,y_train)
-    train_accuracy_SGD[i]=clf.score(X_train,y_train)                  #Log regression using SGD
-    test_accuracy_SGD[i]=clf.score(X_test,y_test)                     #penalty=L2 
-    critical_accuracy_SGD[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.SGDClassifier(loss='log',penalty='l2',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_SGD[i]=clf.score(X_train,y_train)                  #Log regression using SGD
+    #test_accuracy_SGD[i]=clf.score(X_test,y_test)                     #penalty=L2 
+    #critical_accuracy_SGD[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.SGDClassifier(loss='log',penalty='elasticnet',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
-    clf.fit(X_train,y_train)
-    train_accuracy_SGD_el[i]=clf.score(X_train,y_train)                  #Log regression using SGD
-    test_accuracy_SGD_el[i]=clf.score(X_test,y_test)                     #penalty=L1+L2 
-    critical_accuracy_SGD_el[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.SGDClassifier(loss='log',penalty='elasticnet',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_SGD_el[i]=clf.score(X_train,y_train)                  #Log regression using SGD
+    #test_accuracy_SGD_el[i]=clf.score(X_test,y_test)                     #penalty=L1+L2 
+    #critical_accuracy_SGD_el[i]=clf.score(X_critical,Y_critical)
 
 # %%
     
@@ -185,12 +187,12 @@ plt.figure()
 plt.semilogx(lamda,train_accuracy_liblin,'*-b',label='Training (Liblinear)')
 plt.semilogx(lamda,test_accuracy_liblin,'*-r',label='Test (Liblinear)')
 plt.semilogx(lamda,critical_accuracy_liblin,'*-g',label='Critical (Liblinear)')
-plt.semilogx(lamda,train_accuracy_newt,'--b',label='Training (Newton-CG)')
-plt.semilogx(lamda,test_accuracy_newt,'--r',label='Test (Newton-CG)')
-plt.semilogx(lamda,critical_accuracy_newt,'--g',label='Critical (Newton-CG)')
-plt.semilogx(lamda,train_accuracy_saga,'*--b',label='Training (SAGA)')
-plt.semilogx(lamda,test_accuracy_saga,'*--r',label='Test (SAGA)')
-plt.semilogx(lamda,critical_accuracy_saga,'*--g',label='Critical (SAGA)')
+#plt.semilogx(lamda,train_accuracy_newt,'--b',label='Training (Newton-CG)')
+#plt.semilogx(lamda,test_accuracy_newt,'--r',label='Test (Newton-CG)')
+#plt.semilogx(lamda,critical_accuracy_newt,'--g',label='Critical (Newton-CG)')
+#plt.semilogx(lamda,train_accuracy_saga,'*--b',label='Training (SAGA)')
+#plt.semilogx(lamda,test_accuracy_saga,'*--r',label='Test (SAGA)')
+#plt.semilogx(lamda,critical_accuracy_saga,'*--g',label='Critical (SAGA)')
 plt.semilogx(lamda,train_accuracy_SGD,'b',label='Training (SGD)')
 plt.semilogx(lamda,test_accuracy_SGD,'r',label='Test (SGD)')
 plt.semilogx(lamda,critical_accuracy_SGD,'g',label='Critical (SGD)')
@@ -200,7 +202,7 @@ plt.ylabel('Accuracy')
 plt.title('Accuracy (Solver Variation, No Criticality)')
 plt.show()
 
-plt.figure()
+"""plt.figure()
 plt.semilogx(lamda,train_accuracy_saga,'*-b',label='Training (SAGA-L2)')
 plt.semilogx(lamda,test_accuracy_saga,'*-r',label='Test (SAGA-L2)')
 plt.semilogx(lamda,critical_accuracy_saga,'*-g',label='Critical (SAGA-L2)')
@@ -217,7 +219,7 @@ plt.xlabel('Hyperparameters')
 plt.ylabel('Accuracy')
 plt.title('Accuracy (Penalty Variation, No Criticality)')
 plt.legend()
-plt.show()
+plt.show()"""
 
 # %%
 
@@ -271,23 +273,23 @@ for i in range(len(lamda)):
     test_accuracy_liblin_cr[i]=clf.score(X_test,y_test)                   #penalty=L2 by default
     critical_accuracy_liblin_cr[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga',penalty='elasticnet')
-    clf.fit(X_train,y_train)
-    train_accuracy_saga_el_cr[i]=clf.score(X_train,y_train)                #Log regression using SAGA
-    test_accuracy_saga_el_cr[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
-    critical_accuracy_saga_el_cr[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga',penalty='elasticnet')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_saga_el_cr[i]=clf.score(X_train,y_train)                #Log regression using SAGA
+    #test_accuracy_saga_el_cr[i]=clf.score(X_test,y_test)                   #penalty=L1+L2
+    #critical_accuracy_saga_el_cr[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='newton-cg')
-    clf.fit(X_train,y_train)
-    train_accuracy_newt_cr[i]=clf.score(X_train,y_train)                  #Log regression using Newton-cg
-    test_accuracy_newt_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
-    critical_accuracy_newt_cr[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='newton-cg')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_newt_cr[i]=clf.score(X_train,y_train)                  #Log regression using Newton-cg
+    #test_accuracy_newt_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
+    #critical_accuracy_newt_cr[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga')
-    clf.fit(X_train,y_train)
-    train_accuracy_saga_cr[i]=clf.score(X_train,y_train)                  #Log regression using SAGA
-    test_accuracy_saga_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
-    critical_accuracy_saga_cr[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='saga')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_saga_cr[i]=clf.score(X_train,y_train)                  #Log regression using SAGA
+    #test_accuracy_saga_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 by default
+    #critical_accuracy_saga_cr[i]=clf.score(X_critical,Y_critical)
     
     clf=skl.SGDClassifier(loss='log',penalty='l2',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
     clf.fit(X_train,y_train)
@@ -295,11 +297,11 @@ for i in range(len(lamda)):
     test_accuracy_SGD_cr[i]=clf.score(X_test,y_test)                     #penalty=L2 
     critical_accuracy_SGD_cr[i]=clf.score(X_critical,Y_critical)
     
-    clf=skl.SGDClassifier(loss='log',penalty='elasticnet',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
-    clf.fit(X_train,y_train)
-    train_accuracy_SGD_el_cr[i]=clf.score(X_train,y_train)                  #Log regression using SGD
-    test_accuracy_SGD_el_cr[i]=clf.score(X_test,y_test)                     #penalty=L1+L2 
-    critical_accuracy_SGD_el_cr[i]=clf.score(X_critical,Y_critical)
+    #clf=skl.SGDClassifier(loss='log',penalty='elasticnet',alpha=lamda[i],max_iter=100,shuffle=True,random_state=1,learning_rate='optimal')
+    #clf.fit(X_train,y_train)
+    #train_accuracy_SGD_el_cr[i]=clf.score(X_train,y_train)                  #Log regression using SGD
+    #test_accuracy_SGD_el_cr[i]=clf.score(X_test,y_test)                     #penalty=L1+L2 
+    #critical_accuracy_SGD_el_cr[i]=clf.score(X_critical,Y_critical)
 
 # %%
     
@@ -309,12 +311,12 @@ plt.figure()
 plt.semilogx(lamda,train_accuracy_liblin_cr,'*-b',label='Training (Liblinear)')
 plt.semilogx(lamda,test_accuracy_liblin_cr,'*-r',label='Test (Liblinear)')
 plt.semilogx(lamda,critical_accuracy_liblin_cr,'*-g',label='Critical (Liblinear)')
-plt.semilogx(lamda,train_accuracy_newt_cr,'--b',label='Training (Newton-CG)')
-plt.semilogx(lamda,test_accuracy_newt_cr,'--r',label='Test (Newton-CG)')
-plt.semilogx(lamda,critical_accuracy_newt_cr,'--g',label='Critical (Newton-CG)')
-plt.semilogx(lamda,train_accuracy_saga_cr,'*--b',label='Training (SAGA)')
-plt.semilogx(lamda,test_accuracy_saga_cr,'*--r',label='Test (SAGA)')
-plt.semilogx(lamda,critical_accuracy_saga_cr,'*--g',label='Critical (SAGA)')
+#plt.semilogx(lamda,train_accuracy_newt_cr,'--b',label='Training (Newton-CG)')
+#plt.semilogx(lamda,test_accuracy_newt_cr,'--r',label='Test (Newton-CG)')
+#plt.semilogx(lamda,critical_accuracy_newt_cr,'--g',label='Critical (Newton-CG)')
+#plt.semilogx(lamda,train_accuracy_saga_cr,'*--b',label='Training (SAGA)')
+#plt.semilogx(lamda,test_accuracy_saga_cr,'*--r',label='Test (SAGA)')
+#plt.semilogx(lamda,critical_accuracy_saga_cr,'*--g',label='Critical (SAGA)')
 plt.semilogx(lamda,train_accuracy_SGD_cr,'b',label='Training (SGD)')
 plt.semilogx(lamda,test_accuracy_SGD_cr,'r',label='Test (SGD)')
 plt.semilogx(lamda,critical_accuracy_SGD_cr,'g',label='Critical (SGD)')
@@ -324,7 +326,7 @@ plt.title('Accuracy (Solver Variation, Criticality)')
 plt.legend()
 plt.show()
 
-plt.figure()
+"""plt.figure()
 plt.semilogx(lamda,train_accuracy_saga_cr,'*-b',label='Training (SAGA-L2)')
 plt.semilogx(lamda,test_accuracy_saga_cr,'*-r',label='Test (SAGA-L2)')
 plt.semilogx(lamda,critical_accuracy_saga_cr,'*-g',label='Critical (SAGA-L2)')
@@ -341,7 +343,68 @@ plt.xlabel('Hyperparameters')
 plt.ylabel('Accuracy')
 plt.title('Accuracy (Penalty Variation, Criticality)')
 plt.legend()
+plt.show()"""
+
+# %%
+
+"""Implement cross-validation framework (only on liblinear solver)"""
+
+#Initiate k-fold instance for implementing manual cross-validation using KFold
+
+k=5
+kfold=KFold(n_splits=k,random_state=2)
+
+train_accuracy_liblin_cv_kfold=np.zeros(len(lamda),np.float64)
+test_accuracy_liblin_cv_kfold=np.zeros(len(lamda),np.float64)
+critical_accuracy_liblin_cv_kfold=np.zeros(len(lamda),np.float64)
+
+train_scores=np.zeros((len(lamda),k))
+test_scores=np.zeros((len(lamda),k))
+critical_scores=np.zeros((len(lamda),k))
+
+X_temp=np.concatenate((X_ordered,X_disordered),axis=0)    #Combine ordered and disordered spins for split
+Y_temp=np.concatenate((Y_ordered,Y_disordered),axis=0)    #Combine ordered and disordered labels for split
+
+for i in range(len(lamda)):
+    j=0
+    for train_inds,test_inds in kfold.split(X_temp):
+        X_train=X_temp[train_inds]
+        y_train=Y_temp[train_inds]
+        X_test=X_temp[test_inds]
+        y_test=Y_temp[test_inds]
+        
+        X_train=np.concatenate((X_train,X_critical),axis=0)
+        y_train=np.concatenate((y_train,Y_critical),axis=0)
+        
+        clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+1,tol=1E-3,solver='liblinear')
+        clf.fit(X_train,y_train)
+        train_scores[i,j]=clf.score(X_train,y_train)
+        test_scores[i,j]=clf.score(X_test,y_test)
+        critical_scores[i,j]=clf.score(X_critical,Y_critical)
+        j+=1
+        
+    train_accuracy_liblin_cv_kfold[i]=np.mean(train_scores,axis=1)
+    test_accuracy_liblin_cv_kfold[i]=np.mean(test_scores,axis=1)
+    critical_accuracy_liblin_cv_kfold[i]=np.mean(critical_scores,axis=1)
+
+del X_temp,Y_temp
+# %%
+    
+"""Plot accuracy (no criticality) with and without cross-validation"""
+
+plt.figure()
+plt.semilogx(lamda,train_accuracy_liblin,'*-b',label='Training (Liblinear)')
+plt.semilogx(lamda,test_accuracy_liblin,'*-r',label='Test (Liblinear)')
+plt.semilogx(lamda,critical_accuracy_liblin,'*-g',label='Critical (Liblinear)')
+plt.semilogx(lamda,train_accuracy_liblin_cv_kfold,'--b',label='Training (Liblinear+CV)')
+plt.semilogx(lamda,test_accuracy_liblin_cv_kfold,'--r',label='Test (Liblinear+CV)')
+plt.semilogx(lamda,critical_accuracy_liblin_cv_kfold,'--g',label='Critical (Liblinear+CV)')
+plt.legend()
+plt.xlabel('Hyperparameters')
+plt.ylabel('Accuracy')
+plt.title('Accuracy (CV dependence)')
 plt.show()
+
 
     
 
