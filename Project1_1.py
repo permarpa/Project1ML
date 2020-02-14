@@ -194,7 +194,7 @@ plt.show()
 
 #Define Bootstrap parameters
 
-n_bootstrap=500
+n_bootstrap=10
 MSE_boot_OLS_train=np.zeros(len(lamda))
 MSE_boot_OLS_test=np.zeros(len(lamda))
 MSE_boot_Ridge_train=np.zeros(len(lamda))
@@ -227,15 +227,15 @@ for i in range(len(lamda)):
     for j in range(n_bootstrap):
         X_,y_=resample(X_train,y_train)
         clf=skl.LinearRegression(fit_intercept=False).fit(X_,y_)
-        ypred_train_OLS[:,j]=clf.predict(X_).flatten()
+        ypred_train_OLS[:,j]=clf.predict(X_train).flatten()
         ypred_test_OLS[:,j]=clf.predict(X_test).flatten()
         
         clf=skl.Ridge(alpha=lamda[i],fit_intercept=False).fit(X_,y_)
-        ypred_train_Ridge[:,j]=clf.predict(X_).flatten()
+        ypred_train_Ridge[:,j]=clf.predict(X_train).flatten()
         ypred_test_Ridge[:,j]=clf.predict(X_test).flatten()
         
         clf=skl.Lasso(alpha=lamda[i],fit_intercept=False).fit(X_,y_)
-        ypred_train_Lasso[:,j]=clf.predict(X_).flatten()
+        ypred_train_Lasso[:,j]=clf.predict(X_train).flatten()
         ypred_test_Lasso[:,j]=clf.predict(X_test).flatten()
         
     MSE_boot_OLS_train[i]=np.mean(np.mean((y_train-ypred_train_OLS)**2,axis=1,keepdims=True))
