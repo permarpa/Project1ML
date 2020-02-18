@@ -226,6 +226,9 @@ Y_disordered=label[100000:,0]       #Collect all disordered labels
 X_train,X_test,y_train,y_test=splitter(config,label,test_size=0.5)    #Direct splitting of config to include
                                                                       #critical phase matrices in test
 
+y_train=y_train.tolist()
+y_test=y_test.tolist()
+
 
 # %%
 
