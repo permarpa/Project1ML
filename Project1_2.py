@@ -139,7 +139,7 @@ critical_accuracy_SGD_el=np.zeros(len(lamda),np.float64)     #(penalty changed t
 
 for i in range(len(lamda)):
     
-    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='liblinear')
+    clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=1,max_iter=1E+3,tol=1E-5,solver='liblinear')
     clf.fit(X_train,y_train)
     train_accuracy_liblin[i]=clf.score(X_train,y_train)                #Log regression using liblinear
     test_accuracy_liblin[i]=clf.score(X_test,y_test)                   #penalty=L2 by default
@@ -196,10 +196,10 @@ plt.semilogx(lamda,test_accuracy_saga,'*-r',linewidth=1.5,label='Test (SAGA-L2)'
 plt.semilogx(lamda,critical_accuracy_saga,'*-g',linewidth=1.5,label='Critical (SAGA-L2)')
 plt.semilogx(lamda,train_accuracy_saga_el,'--b',linewidth=1.5,label='Training (SAGA-L1+L2)')
 plt.semilogx(lamda,test_accuracy_saga_el,'--r',linewidth=1.5,label='Test (SAGA-L1+L2)')
-plt.semilogx(lamda,critical_accuracy_saga_el,'--g',label='Critical (SAGA-L1+L2)')
+plt.semilogx(lamda,critical_accuracy_saga_el,'--g',linewidth=1.5,label='Critical (SAGA-L1+L2)')
 plt.semilogx(lamda,train_accuracy_SGD,'*--b',linewidth=1.5,label='Training (SGD-L2)')
 plt.semilogx(lamda,test_accuracy_SGD,'*--r',linewidth=1.5,label='Test (SGD-L2)')
-plt.semilogx(lamda,critical_accuracy_SGD,*--'g',linewidth=1.5,label='Critical (SGD-L2)')
+plt.semilogx(lamda,critical_accuracy_SGD,'*--g',linewidth=1.5,label='Critical (SGD-L2)')
 plt.semilogx(lamda,train_accuracy_SGD_el,'b',linewidth=1.5,label='Training (SGD-L1+L2)')
 plt.semilogx(lamda,test_accuracy_SGD_el,'r',linewidth=1.5,label='Test (SGD-L1+L2)')
 plt.semilogx(lamda,critical_accuracy_SGD_el,'g',linewidth=1.5,label='Critical (SGD-L1+L2)')
@@ -226,8 +226,8 @@ Y_disordered=label[100000:,0]       #Collect all disordered labels
 X_train,X_test,y_train,y_test=splitter(config,label,test_size=0.5)    #Direct splitting of config to include
                                                                       #critical phase matrices in test
 
-y_train=y_train.tolist()
-y_test=y_test.tolist()
+y_train=y_train.ravel()     #Convert from 1D column vector to array
+y_test=y_test.ravel()
 
 
 # %%
@@ -317,7 +317,7 @@ plt.semilogx(lamda,test_accuracy_saga_el_cr,'--r',linewidth=1.5,label='Test (SAG
 plt.semilogx(lamda,critical_accuracy_saga_el_cr,'--g',linewidth=1.5,label='Critical (SAGA-L1+L2)')
 plt.semilogx(lamda,train_accuracy_SGD_cr,'*--b',linewidth=1.5,label='Training (SGD-L2)')
 plt.semilogx(lamda,test_accuracy_SGD_cr,'*--r',linewidth=1.5,label='Test (SGD-L2)')
-plt.semilogx(lamda,critical_accuracy_SGD_cr,*--'g',linewidth=1.5,label='Critical (SGD-L2)')
+plt.semilogx(lamda,critical_accuracy_SGD_cr,'*--g',linewidth=1.5,label='Critical (SGD-L2)')
 plt.semilogx(lamda,train_accuracy_SGD_el_cr,'b',linewidth=1.5,label='Training (SGD-L1+L2)')
 plt.semilogx(lamda,test_accuracy_SGD_el_cr,'r',linewidth=1.5,label='Test (SGD-L1+L2)')
 plt.semilogx(lamda,critical_accuracy_SGD_el_cr,'g',linewidth=1.5,label='Critical (SGD-L1+L2)')
@@ -355,7 +355,7 @@ for i in range(len(lamda)):
         X_train=np.concatenate((X_train,X_critical),axis=0)   #Append critical phase configurations to train 
         y_train=np.concatenate((y_train,Y_critical),axis=0)   #Append critical phase labels to train
         
-        clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=0,max_iter=1E+3,tol=1E-5,solver='liblinear')
+        clf=skl.LogisticRegression(C=1.0/lamda[i],random_state=1,verbose=1,max_iter=1E+3,tol=1E-5,solver='liblinear')
         clf.fit(X_train,y_train)
         train_scores[i,j]=clf.score(X_train,y_train)
         test_scores[i,j]=clf.score(X_test,y_test)
@@ -382,7 +382,7 @@ plt.legend()
 plt.grid()
 plt.xlabel('\u03BB',fontweight='bold')
 plt.ylabel('Accuracy',fontweight='bold')
-plt.title('System Performance (5-fold Cross Validation)')
+plt.title('System Performance (5-fold Cross Validation)',fontweight='bold')
 plt.show()
 
 
