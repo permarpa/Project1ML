@@ -1,11 +1,14 @@
 # Project1ML
-Project 1 of Machine Learning course. January 2020. 
+Project 1 of Machine Learning course https://compphysics.github.io/MLErasmus/doc/web/course.html January 2020. 
 
 Students involved:
 
 Mishra, Bharat.
+
 Christodoulou, Pinelopi.
+
 Pérez Martín, Patricia.
+
 
 In this repository you may find the folder including the CODE used in the report, as well as the folder with the relevant RESULTS.
 
